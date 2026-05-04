@@ -4,4 +4,4 @@ opencv-python-headless
 pillow
 openai
 numpy
-
+plotly
