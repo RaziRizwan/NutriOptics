@@ -522,38 +522,24 @@ def render_analysis_results(result, extracted_text, clarity_score, was_cropped, 
 # SIDEBAR
 # ─────────────────────────────────────────────
 with st.sidebar:
-    st.image("logo-white.jpeg", use_container_width=True)
+    st.image("logo.jpeg", use_container_width=True)
 
     st.markdown("---")
-    st.markdown("### 👤 Your Health Profile")
-    st.caption("Personalize the AI analysis to your conditions.")
-
-    conditions = st.multiselect(
-        "Medical Conditions",
-        ["Diabetes (Type 2)", "Type 1 Diabetes", "Hypertension", "Heart Disease",
-         "High Cholesterol", "Celiac Disease", "Kidney Disease", "Obesity"],
-        default=[],
-        key="conditions"
-    )
-
-    allergies = st.text_input(
-        "Allergies / Intolerances",
-        placeholder="e.g. gluten, lactose, peanuts",
-        key="allergies"
-    )
-
-    goal = st.selectbox(
-        "Primary Health Goal",
-        ["General wellness", "Weight loss", "Muscle gain",
-         "Blood sugar control", "Heart health", "Low sodium diet"],
-        key="goal"
-    )
-
-    health_profile = {
-        "conditions": conditions,
-        "allergies": allergies,
-        "goal": goal
-    }
+    with st.expander("Instructions & Tips", expanded=False):
+        st.markdown("""
+        **How it works:**
+        1. Set your health profile on the home page
+        2. Upload a food nutrition label photo
+        3. AI extracts and analyzes the label
+        4. Review your personalized health insights
+        """)
+        st.markdown("""
+        **Tips for best results:**
+        - Use clear, well-lit photos
+        - Ensure the full nutrition table is visible
+        - Avoid blurry or angled images
+        - Text must be readable and uncut
+        """)
 
     st.markdown("---")
 
@@ -605,24 +591,39 @@ st.markdown("""
 <p style="color:#8888aa; font-size:1rem; margin-top:4px;">See. Scan. Eat Healthy.</p>
 """, unsafe_allow_html=True)
 
-with st.expander("📖 Instructions & Tips", expanded=False):
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown("""
-        **How it works:**
-        1. Set your health profile in the sidebar
-        2. Upload a food nutrition label photo
-        3. AI extracts and analyzes the label
-        4. Review your personalized health insights
-        """)
-    with col2:
-        st.markdown("""
-        **Tips for best results:**
-        - Use clear, well-lit photos
-        - Ensure the full nutrition table is visible
-        - Avoid blurry or angled images
-        - Text must be readable and uncut
-        """)
+st.markdown("### 👤 Your Health Profile")
+st.caption("Personalize the AI analysis to your conditions before scanning a label.")
+
+profile_col1, profile_col2, profile_col3 = st.columns([1.2, 1, 1])
+with profile_col1:
+    conditions = st.multiselect(
+        "Medical Conditions",
+        ["Diabetes (Type 2)", "Type 1 Diabetes", "Hypertension", "Heart Disease",
+         "High Cholesterol", "Celiac Disease", "Kidney Disease", "Obesity"],
+        default=[],
+        key="conditions"
+    )
+
+with profile_col2:
+    allergies = st.text_input(
+        "Allergies / Intolerances",
+        placeholder="e.g. gluten, lactose, peanuts",
+        key="allergies"
+    )
+
+with profile_col3:
+    goal = st.selectbox(
+        "Primary Health Goal",
+        ["General wellness", "Weight loss", "Muscle gain",
+         "Blood sugar control", "Heart health", "Low sodium diet"],
+        key="goal"
+    )
+
+health_profile = {
+    "conditions": conditions,
+    "allergies": allergies,
+    "goal": goal
+}
 
 st.markdown("---")
 
