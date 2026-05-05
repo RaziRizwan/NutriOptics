@@ -266,11 +266,29 @@ Respond ONLY with a JSON object in this exact format (no markdown, no extra text
 }}"""
 
 
+def get_hf_api_key():
+    """Read the Hugging Face key from env vars or Streamlit secrets."""
+    env_key = os.getenv("HF_KEY") or os.getenv("HUGGINGFACE_API_KEY")
+    if env_key:
+        return env_key
+
+    try:
+        return st.secrets.get("HF_KEY") or st.secrets.get("HUGGINGFACE_API_KEY")
+    except (FileNotFoundError, KeyError, AttributeError):
+        return None
+
+
 def query_llm(text, health_profile, servings=1):
     prompt = build_prompt(text, health_profile, servings)
+    api_key = get_hf_api_key()
+    if not api_key:
+        st.error("Missing Hugging Face API key.")
+        st.info("On Streamlit Cloud, add `HF_KEY` in Manage app -> Settings -> Secrets, then redeploy the app.")
+        st.stop()
+
     client = OpenAI(
         base_url="https://router.huggingface.co/v1",
-        api_key=st.secrets["HF_KEY"]
+        api_key=api_key
     )
     completion = client.chat.completions.create(
         model="openai/gpt-oss-20b:fireworks-ai",
